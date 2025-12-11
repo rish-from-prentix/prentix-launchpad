@@ -1,7 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -83,13 +82,28 @@ Page URL: ${pageUrl}
 Notes: ${notes}
     `.trim();
 
-    const emailResponse = await resend.emails.send({
-      from: "Prentix <onboarding@resend.dev>",
-      to: ["hello@prentix.ai"],
-      subject: subject,
-      html: htmlBody,
-      text: textBody,
+    // Use Resend API directly via fetch
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Prentix <onboarding@resend.dev>",
+        to: ["hello@prentix.ai"],
+        subject: subject,
+        html: htmlBody,
+        text: textBody,
+      }),
     });
+
+    const emailResponse = await response.json();
+
+    if (!response.ok) {
+      console.error("Resend API error:", emailResponse);
+      throw new Error(emailResponse.message || "Failed to send email");
+    }
 
     console.log("Email sent successfully:", emailResponse);
 
