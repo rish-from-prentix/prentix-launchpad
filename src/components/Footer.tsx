@@ -48,12 +48,12 @@ const Footer = () => {
                 <span>Chat on WhatsApp</span>
               </a>
             </div>
-          </div>
 
-          <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-4xl mx-auto mb-6">
-            We're on a mission to close the employability gap at scale by helping every student realise their full
-            potential.
-          </p>
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-4xl mx-auto mb-6">
+              We're on a mission to close the employability gap at scale by helping every student realise their full
+              potential.
+            </p>
+          </div>
 
           {/* Divider */}
           <div className="h-px bg-border/50 mb-12" />
