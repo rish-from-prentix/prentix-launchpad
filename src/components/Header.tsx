@@ -11,9 +11,9 @@ const Header = ({ onOpenModal }: HeaderProps) => {
 
   const navLinks = [
     { label: "How it works", href: "#how-it-works" },
-    { label: "Tracks", href: "#advantages" },
-    { label: "Pricing", href: "#pricing" },
+    { label: "Why Prentix?", href: "#advantages" },
     { label: "FAQs", href: "#faqs" },
+    { label: "Contact us", href: "#footer" },
   ];
 
   return (
@@ -28,11 +28,7 @@ const Header = ({ onOpenModal }: HeaderProps) => {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="nav-link text-sm font-medium"
-            >
+            <a key={link.label} href={link.href} className="nav-link text-sm font-medium">
               {link.label}
             </a>
           ))}
@@ -40,10 +36,7 @@ const Header = ({ onOpenModal }: HeaderProps) => {
 
         {/* Desktop CTA */}
         <div className="hidden md:block">
-          <button
-            onClick={onOpenModal}
-            className="btn-primary text-sm font-semibold"
-          >
+          <button onClick={onOpenModal} className="btn-primary text-sm font-semibold">
             START YOUR FIRST INTERNSHIP NOW
           </button>
         </div>
