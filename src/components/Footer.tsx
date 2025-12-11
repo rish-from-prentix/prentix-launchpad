@@ -12,7 +12,7 @@ const Footer = () => {
           <div className="text-center mb-16">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Contact us</h2>
 
-            <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-3xl mx-auto mb-6">
+            <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-4xl mx-auto mb-6">
               We're on a mission to close the employability gap at scale by helping every student realise their full
               potential.
               <br />
