@@ -50,6 +50,15 @@ const Footer = () => {
             </div>
           </div>
 
+          {/* Mission Statement Card */}
+          <div className="my-16 md:my-20 flex justify-center">
+            <div className="max-w-3xl w-full rounded-2xl bg-gradient-to-br from-muted/80 to-muted/40 border border-primary/20 p-8 md:p-12 shadow-lg shadow-primary/5">
+              <p className="text-center text-foreground/90 text-base md:text-lg leading-relaxed">
+                We're on a mission to close the employability gap at scale by helping every student realise their full potential. If you're a student, a university, a brand looking to partner, or simply someone who believes in what we're building, we'd love to hear from you.
+              </p>
+            </div>
+          </div>
+
           {/* Divider */}
           <div className="h-px bg-border/50 mb-12" />
 
