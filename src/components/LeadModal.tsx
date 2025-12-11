@@ -1,20 +1,33 @@
 import { useState } from "react";
-import { X, Check, Loader2 } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
+import InterestSelection from "./InterestSelection";
+import SuccessScreen from "./SuccessScreen";
 
 interface LeadModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+type ModalStep = "form" | "interests" | "success";
+
+interface LeadData {
+  name: string;
+  email: string;
+  phone: string;
+}
+
 const LeadModal = ({ isOpen, onClose }: LeadModalProps) => {
-  const [formData, setFormData] = useState({
+  const [step, setStep] = useState<ModalStep>("form");
+  const [formData, setFormData] = useState<LeadData>({
     name: "",
     email: "",
     phone: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
   // Honeypot field
   const [honeypot, setHoneypot] = useState("");
@@ -27,9 +40,41 @@ const LeadModal = ({ isOpen, onClose }: LeadModalProps) => {
     return /^[+]?[\d\s-]{10,}$/.test(phone);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const sendLeadEmail = async (
+    data: LeadData,
+    interests: string[] = [],
+    emailStep: "initial" | "interests"
+  ) => {
+    try {
+      const { error } = await supabase.functions.invoke("send-lead-email", {
+        body: {
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          interests,
+          pageUrl: window.location.href,
+          step: emailStep,
+        },
+      });
+
+      if (error) {
+        console.error("Email send error:", error);
+        throw error;
+      }
+    } catch (err) {
+      console.error("Failed to send lead email:", err);
+      // Show non-blocking toast but continue flow
+      toast({
+        title: "Note",
+        description: "We received your submission. We'll be in touch soon!",
+        variant: "default",
+      });
+    }
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Honeypot check
     if (honeypot) return;
 
@@ -57,27 +102,102 @@ const LeadModal = ({ isOpen, onClose }: LeadModalProps) => {
     setIsSubmitting(true);
     setErrors({});
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Send initial email
+    await sendLeadEmail(formData, [], "initial");
 
-    // Track analytics event
+    // Analytics event
     if (typeof window !== "undefined") {
-      console.log("Analytics: lead_submitted", formData);
+      console.log("Analytics: lead_submitted_initial", formData);
     }
 
     setIsSubmitting(false);
-    setIsSuccess(true);
+    setStep("interests");
+
+    // Analytics event
+    if (typeof window !== "undefined") {
+      console.log("Analytics: interests_shown");
+    }
+  };
+
+  const handleInterestsSubmit = async (interests: string[]) => {
+    setIsSubmitting(true);
+    setSelectedInterests(interests);
+
+    // Send updated email with interests
+    await sendLeadEmail(formData, interests, "interests");
+
+    // Analytics event
+    if (typeof window !== "undefined") {
+      console.log("Analytics: interests_submitted", { interests });
+    }
+
+    setIsSubmitting(false);
+    setStep("success");
+
+    // Analytics event
+    if (typeof window !== "undefined") {
+      console.log("Analytics: success_shown");
+    }
+  };
+
+  const handleSkip = () => {
+    setSelectedInterests([]);
+    setStep("success");
+
+    // Analytics event
+    if (typeof window !== "undefined") {
+      console.log("Analytics: success_shown");
+    }
   };
 
   const handleClose = () => {
+    // If on interests step and user closes, show success
+    if (step === "interests") {
+      setStep("success");
+      return;
+    }
+
+    // Reset and close
     setFormData({ name: "", email: "", phone: "" });
     setErrors({});
-    setIsSuccess(false);
+    setStep("form");
+    setSelectedInterests([]);
+    onClose();
+  };
+
+  const handleSuccessClose = () => {
+    setFormData({ name: "", email: "", phone: "" });
+    setErrors({});
+    setStep("form");
+    setSelectedInterests([]);
     onClose();
   };
 
   if (!isOpen) return null;
 
+  // Success screen (full-screen)
+  if (step === "success") {
+    return (
+      <SuccessScreen
+        hasSelectedInterests={selectedInterests.length > 0}
+        onClose={handleSuccessClose}
+      />
+    );
+  }
+
+  // Interest selection screen
+  if (step === "interests") {
+    return (
+      <InterestSelection
+        onSubmit={handleInterestsSubmit}
+        onSkip={handleSkip}
+        onClose={handleClose}
+        isSubmitting={isSubmitting}
+      />
+    );
+  }
+
+  // Initial form
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center p-4"
@@ -102,128 +222,112 @@ const LeadModal = ({ isOpen, onClose }: LeadModalProps) => {
           <X size={20} />
         </button>
 
-        {isSuccess ? (
-          <div className="text-center py-8">
-            <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-6">
-              <Check className="w-8 h-8 text-primary" />
-            </div>
-            <h3 className="text-2xl font-bold text-foreground mb-2">
-              Thanks!
-            </h3>
-            <p className="text-muted-foreground">
-              We'll get in touch soon.
-            </p>
-          </div>
-        ) : (
-          <>
-            <h2
-              id="modal-title"
-              className="text-2xl font-bold text-foreground mb-2"
+        <h2
+          id="modal-title"
+          className="text-2xl font-bold text-foreground mb-2"
+        >
+          Start Your Internship
+        </h2>
+        <p className="text-muted-foreground mb-6">
+          Enter your details and we'll help you get started.
+        </p>
+
+        <form onSubmit={handleFormSubmit} className="space-y-4">
+          {/* Honeypot - hidden from users */}
+          <input
+            type="text"
+            name="website"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+            className="hidden"
+            tabIndex={-1}
+            autoComplete="off"
+          />
+
+          {/* Name */}
+          <div>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-foreground mb-2"
             >
-              Start Your Internship
-            </h2>
-            <p className="text-muted-foreground mb-6">
-              Enter your details and we'll help you get started.
-            </p>
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              className="w-full px-4 py-3 bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+              placeholder="Your full name"
+            />
+            {errors.name && (
+              <p className="mt-1 text-sm text-destructive">{errors.name}</p>
+            )}
+          </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Honeypot - hidden from users */}
-              <input
-                type="text"
-                name="website"
-                value={honeypot}
-                onChange={(e) => setHoneypot(e.target.value)}
-                className="hidden"
-                tabIndex={-1}
-                autoComplete="off"
-              />
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-foreground mb-2"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              className="w-full px-4 py-3 bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+              placeholder="you@email.com"
+            />
+            {errors.email && (
+              <p className="mt-1 text-sm text-destructive">{errors.email}</p>
+            )}
+          </div>
 
-              {/* Name */}
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-foreground mb-2"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
-                  placeholder="Your full name"
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-destructive">{errors.name}</p>
-                )}
-              </div>
+          {/* Phone */}
+          <div>
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-foreground mb-2"
+            >
+              Phone Number
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              value={formData.phone}
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
+              className="w-full px-4 py-3 bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+              placeholder="+91 XXXXX XXXXX"
+            />
+            {errors.phone && (
+              <p className="mt-1 text-sm text-destructive">{errors.phone}</p>
+            )}
+          </div>
 
-              {/* Email */}
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-foreground mb-2"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
-                  placeholder="you@email.com"
-                />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-destructive">{errors.email}</p>
-                )}
-              </div>
-
-              {/* Phone */}
-              <div>
-                <label
-                  htmlFor="phone"
-                  className="block text-sm font-medium text-foreground mb-2"
-                >
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  className="w-full px-4 py-3 bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all"
-                  placeholder="+91 XXXXX XXXXX"
-                />
-                {errors.phone && (
-                  <p className="mt-1 text-sm text-destructive">{errors.phone}</p>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full btn-primary py-4 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Submitting...
-                  </span>
-                ) : (
-                  "Submit"
-                )}
-              </button>
-            </form>
-          </>
-        )}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full btn-primary py-4 text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Submitting...
+              </span>
+            ) : (
+              "Submit"
+            )}
+          </button>
+        </form>
       </div>
     </div>
   );
