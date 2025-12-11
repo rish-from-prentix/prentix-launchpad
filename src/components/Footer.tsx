@@ -10,7 +10,11 @@ const Footer = () => {
         <div className="max-w-5xl mx-auto">
           {/* Contact Section */}
           <div className="text-center mb-16">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">Contact us</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Contact us</h2>
+            
+            <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-6">
+              We're on a mission to close the employability gap at scale by helping every student realise their full potential. If you're a student, a university, a brand looking to partner, or simply someone who believes in what we're building, <span className="text-primary">we'd love to hear from you.</span>
+            </p>
 
             <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
               {/* Phone */}
@@ -47,15 +51,6 @@ const Footer = () => {
                 </div>
                 <span>Chat on WhatsApp</span>
               </a>
-            </div>
-          </div>
-
-          {/* Mission Statement Card */}
-          <div className="my-16 md:my-20 flex justify-center">
-            <div className="max-w-3xl w-full rounded-2xl bg-gradient-to-br from-muted/80 to-muted/40 border border-primary/20 p-8 md:p-12 shadow-lg shadow-primary/5">
-              <p className="text-center text-foreground/90 text-base md:text-lg leading-relaxed">
-                We're on a mission to close the employability gap at scale by helping every student realise their full potential. If you're a student, a university, a brand looking to partner, or simply someone who believes in what we're building, we'd love to hear from you.
-              </p>
             </div>
           </div>
 
