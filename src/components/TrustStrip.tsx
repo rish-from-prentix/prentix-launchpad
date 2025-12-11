@@ -10,7 +10,7 @@ const TrustStrip = () => {
           <img 
             src={isbLogo} 
             alt="ISB - Indian School of Business" 
-            className="h-10 brightness-0 invert opacity-90"
+            className="h-10"
           />
         </div>
       </div>
