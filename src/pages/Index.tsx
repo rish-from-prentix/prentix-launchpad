@@ -30,8 +30,8 @@ const Index = () => {
       <main>
         <Hero onOpenModal={openModal} />
         <HowItWorks />
-        <TrustStrip />
         <Testimonials />
+        <TrustStrip />
         <Advantages />
         <FAQs />
         <LongFormCopy onOpenModal={openModal} />
