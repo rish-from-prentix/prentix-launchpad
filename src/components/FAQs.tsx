@@ -7,20 +7,24 @@ const faqs = [
     answer: "Prentix offers fully AI-mentored virtual internships with top brands. You get to solve real-world problems while being guided by expert AI mentors, earning a verified credential upon completion.",
   },
   {
-    question: "How long does an internship take?",
-    answer: "Internships are self-paced. You can complete them at your own speed, whether that's a few days or a few weeks. Your AI mentor is available 24/7 to help you progress.",
+    question: "Whom is this internship for?",
+    answer: "Prentix internships are open to students from Engineering, Arts, Commerce, or any other field. As long as you're committed to exploring your track deeply, your background will never be a barrier.",
   },
   {
-    question: "Do I need any prior experience?",
-    answer: "No prior experience is required. Our internships are open to all and designed to take you from beginner to confident problem-solver with structured guidance.",
+    question: "In which tracks can I intern?",
+    answer: "You can choose from a wide range of high-demand fields: Software engineering, UI/UX design, product management, prompt engineering, data science, data engineering, management consulting, brand marketing, digital marketing & even academic research.",
   },
   {
-    question: "What credential will I receive?",
-    answer: "Upon successful completion, you receive a verified performance credential that showcases your ability to solve real problems. Recruiters recognize and value this proof of your skills.",
+    question: "I have no prior experience. Can I still enroll?",
+    answer: "Prentix internships are designed to be beginner-friendly. Even if you’re an absolute beginner, we can get you from “clueless” to “able to land any role” on one condition — You have to be extremely serious about your career!",
   },
   {
-    question: "How does the AI mentorship work?",
-    answer: "Your AI mentor provides instant feedback, hints when you're stuck, and guides you through complex problems. It's like having a patient, knowledgeable mentor available whenever you need help.",
+    question: "How long is the internship?",
+    answer: "All Prentix internships are self-paced. Most students complete it in 4-8 weeks, but fast learners often finish earlier. Your AI mentor is available 24/7 to help you progress. You decide your pace — we only expect consistency.",
+  },
+  {
+    question: "Will I get a certificate?",
+    answer: "Absolutely. Every student who completes an internship receives an industry-recognised certificate from the brand they worked with — a credential you can add to your résumé and LinkedIn, and one that recruiters notice instantly.",
   },
 ];
 

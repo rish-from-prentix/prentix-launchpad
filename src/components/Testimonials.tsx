@@ -3,24 +3,24 @@ import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    quote: "After spending months going through courses, I felt clueless about approaching new problems. Solving problems here in a structured fashion changed that for me. I wonder how it would've been, had I found Prentix sooner!",
-    name: "Prentix User",
-    role: "Career Explorer",
+    quote: "After spending months going through courses online, I was still feeling lost. Solving problems here in a structured fashion changed that for me!",
+    name: "Arjun K",
+    role: "CRED",
   },
   {
-    quote: "The internship was truly a gamechanger for me. I went from not knowing how to approach solving problems to landing my dream job in no time!",
-    name: "Prentix User",
-    role: "Now Employed",
+    quote: "The internship was truly a gamechanger for me. I went from not knowing how to approach solving problems to cracking my dream offer in 2 months!",
+    name: "Muskan A",
+    role: "Google",
   },
   {
     quote: "Everytime I was stuck, I used to spam my mentor until I got the concepts cleared. I really understood how big firms approach problems.",
-    name: "Name",
-    role: "Fareportal",
+    name: "Leena",
+    role: "Wells Fargo",
   },
   {
-    quote: "The occasional tips dropped by my mentor were the true game-changers for me.",
-    name: "Prentix User",
-    role: "Problem Solver",
+    quote: "The mentor insights hit different. One conversation with my mentor & I realised I’d been thinking about problems the wrong way & totally flipped my perspective. That alone made the internship worth it.",
+    name: "Pradyu M",
+    role: "BCG-X",
   },
 ];
 

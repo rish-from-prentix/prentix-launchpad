@@ -28,7 +28,7 @@ const LongFormCopy = ({ onOpenModal }: LongFormCopyProps) => {
 
             <div className="space-y-4">
               <p className="text-xl md:text-2xl font-semibold text-primary">
-                So what should I do as a student?
+                So what should you do as a student?
               </p>
               <p className="text-lg md:text-xl text-foreground leading-relaxed">
                 Well, stop talking about potential.
@@ -43,9 +43,6 @@ const LongFormCopy = ({ onOpenModal }: LongFormCopyProps) => {
             <div className="space-y-4">
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
                 Solve real-world problems faced by top brands.
-              </p>
-              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                Get AI-powered feedback that makes you sharper along the way.
               </p>
               <p className="text-lg md:text-xl text-foreground leading-relaxed font-medium">
                 Build a portfolio that speaks louder than your résumé.
