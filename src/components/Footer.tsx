@@ -49,7 +49,7 @@ const Footer = () => {
               </a>
             </div>
 
-            <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-4xl mx-auto mb-6">
+            <p className="text-muted-foreground text-xs md:text-sm leading-relaxed max-w-4xl mx-auto mb-6">
               We're on a mission to close the employability gap at scale by helping every student realise their full
               potential.
             </p>
