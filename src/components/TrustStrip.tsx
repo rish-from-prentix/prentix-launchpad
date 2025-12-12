@@ -9,7 +9,7 @@ const TrustStrip = () => {
           <img
             src={backersLogo}
             alt="ISB DLabs and AIC - Indian School of Business"
-            className="block object-contain w-full max-w-[140px] sm:max-w-[220px] md:max-w-none md:w-[820px] h-auto"
+            className="block object-contain w-full max-w-[160px] sm:max-w-[240px] md:w-[600px] h-auto"
           />
         </div>
       </div>
